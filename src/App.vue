@@ -1,12 +1,14 @@
 <template>
   <div id="app">
-    <router-view></router-view>
-    <main-tab-bar></main-tab-bar>
+    <!-- 显示路由信息 -->
+    <router-view/>
+    <!-- 显示tabbar的内容 -->
+    <main-tab-bar/>
   </div>
 </template>
 
 <script>
-import MainTabBar from "./components/content/MainTabBar";
+import MainTabBar from "components/content/MainTabBar";
 
 export default {
   name: "App",
@@ -17,5 +19,6 @@ export default {
 </script>
 
 <style>
+/* 导入默认的CSS样式 */
 @import "./assets/css/base.css";
 </style>

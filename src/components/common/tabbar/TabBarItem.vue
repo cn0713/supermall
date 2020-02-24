@@ -19,7 +19,7 @@ export default {
     path: String,
     activeColor: {
       type: String,
-      default: "#e3657d"
+      default: "#ff5777"
     }
   },
   data() {
@@ -28,9 +28,13 @@ export default {
   computed: {
     isActive() {
       // $route当前活跃的路由
+      // 当前活跃的组件的path和动态获取的path相同时，indexOf的值不等于-1,则为true
+      // indexOf: 返回指定字符串在字符串中首次出现的位子
       return this.$route.path.indexOf(this.path) != -1;
     },
+    // 动态改变字体颜色
     activeStyle() {
+      // 当isActive处于活跃是调用{color:this.activeColor}，否则调用{}
       return this.isActive ? { color: this.activeColor } : {};
     }
   },
