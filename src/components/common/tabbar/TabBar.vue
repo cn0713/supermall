@@ -21,7 +21,7 @@ export default {
   left: 0;
   right: 0;
   /* 本身的样式 */
-  height: 49px;
+  height: 50px;
   background-color: #f6f6f6;
   border-top: 1px solid #eee;
   box-shadow: 0px -1px 1px rgba(150,150,150,.08);
