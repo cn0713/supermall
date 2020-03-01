@@ -33,6 +33,8 @@ export default {
     itemClick(index){
       // 将点击到的index赋值给currentIndex,然后再:active里面进行判断
       this.currentIndex=index;
+      // 将子组件的index传给父组件
+      this.$emit('tabClick',index);
     }
   }
 };
