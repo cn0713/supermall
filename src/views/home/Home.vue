@@ -4,7 +4,12 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content">
+    <scroll class="content" 
+            ref="scroll" 
+            :probe-type="3"
+            @scroll="contentScroll"
+            :pull-up-load="true"
+            @pullingUp="loadMore">
       <!-- 轮播图 -->
       <home-swiper :banners="banners" />
       <!-- 推荐图 -->
@@ -16,6 +21,8 @@
       <!-- 商品栏 -->
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
+    <!-- 返回最上层按钮 -->
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -30,6 +37,7 @@ import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
+import BackTop from "components/content/backTop/BackTop";
 
 // 网络封装的组件
 import { getHomeMultidata, getHomeGoods } from "network/home";
@@ -43,7 +51,8 @@ export default {
     HomeFeature,
     TabControl,
     GoodsList,
-    Scroll
+    Scroll,
+    BackTop
   },
   data() {
     return {
@@ -63,7 +72,9 @@ export default {
         sell: { page: 0, list: [] }
       },
       // 当前默认的商品类型
-      currentType: "pop"
+      currentType: "pop",
+      // 点击回到顶部按钮的条件判断索引
+      isShowBackTop: false
     };
   },
   // vue生命周期，当vue运行时调用
@@ -78,6 +89,7 @@ export default {
   },
   computed: {
     showGoods() {
+      // 返回对应商品的list数据
       return this.goods[this.currentType].list;
     }
   },
@@ -100,6 +112,23 @@ export default {
         default:
           break;
       }
+    },
+    backClick() {
+      // 调用scroll组件中的scrollTo方法
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    contentScroll(position) {
+      this.isShowBackTop = -position.y > 1000;
+    },
+    loadMore(){
+      /**
+       * 当能使用上拉加载更多功能时，再次调用getHomeGoods方法，
+       * 从网络中获取对应的商品数据
+       */ 
+      this.getHomeGoods(this.currentType);
+
+      // 调用scroll组件中的refresh方法
+      this.$refs.scroll.refresh();
     },
 
     /***
@@ -127,6 +156,9 @@ export default {
         this.goods[type].list.push(...res.data.list);
         // 当获取到新数据时，更新goods中对应type的page值
         this.goods[type].page = page;
+
+        // 调用scroll组件中的finishPullUp方法
+        this.$refs.scroll.finishPullUp();
       });
     }
   }
@@ -151,14 +183,12 @@ export default {
   top: 44px;
 }
 
-.content{
+.content {
   overflow: hidden;
   position: absolute;
   top: 44px;
   bottom: 49px;
   left: 0;
   right: 0;
-  
-
 }
 </style>
