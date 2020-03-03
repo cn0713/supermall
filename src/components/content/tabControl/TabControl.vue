@@ -1,7 +1,7 @@
 <template>
   <div class="tab-control">
     <!-- :class 当前谁处于index状态就调用active样式 -->
-    <div v-for="(item,index) in titles" :key="index" 
+    <div v-for="(item,index) in titles" 
          class="tab-control-item" 
          :class="{active:index==currentIndex}"
          @click="itemClick(index)"

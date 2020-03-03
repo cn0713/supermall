@@ -4,12 +4,14 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content" 
-            ref="scroll" 
-            :probe-type="3"
-            @scroll="contentScroll"
-            :pull-up-load="true"
-            @pullingUp="loadMore">
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore"
+    >
       <!-- 轮播图 -->
       <home-swiper :banners="banners" />
       <!-- 推荐图 -->
@@ -25,7 +27,6 @@
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
-
 <script>
 // Home封装的组件
 import HomeSwiper from "./childComps/HomeSwiper";
@@ -41,6 +42,7 @@ import BackTop from "components/content/backTop/BackTop";
 
 // 网络封装的组件
 import { getHomeMultidata, getHomeGoods } from "network/home";
+import { debounce } from "components/common/utils/utils";
 
 export default {
   name: "Home",
@@ -87,6 +89,15 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
+  // vue生命周期，当html模板创建完成后调用
+  mounted() {
+    // 监听item中图片加载完成
+    this.$bus.$on("itemImageLoad", () => {
+      // 调用防抖方法，降低refresh刷新的次数
+      debounce(this.$refs.scroll.refresh,200)
+    });
+  },
+
   computed: {
     showGoods() {
       // 返回对应商品的list数据
@@ -118,17 +129,19 @@ export default {
       this.$refs.scroll.scrollTo(0, 0);
     },
     contentScroll(position) {
+      // 当滚动的位置大于1000,为true时，显示回到顶部按钮
       this.isShowBackTop = -position.y > 1000;
     },
-    loadMore(){
+    loadMore() {
       /**
        * 当能使用上拉加载更多功能时，再次调用getHomeGoods方法，
        * 从网络中获取对应的商品数据
-       */ 
+       */
+
       this.getHomeGoods(this.currentType);
 
       // 调用scroll组件中的refresh方法
-      this.$refs.scroll.refresh();
+      // this.$refs.scroll.refresh();
     },
 
     /***
