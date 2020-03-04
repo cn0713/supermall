@@ -4,6 +4,8 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <!-- 商品导航 默认隐藏，当TabControl吸顶时显示-->
+    <tab-control :titles="titles" @tabClick="tabClick" ref="tabControl1" v-show="isTabFixd"></tab-control>
     <scroll
       class="content"
       ref="scroll"
@@ -13,13 +15,13 @@
       @pullingUp="loadMore"
     >
       <!-- 轮播图 -->
-      <home-swiper :banners="banners" />
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
       <!-- 推荐图 -->
       <home-recommends :recommends="recommends" />
       <!-- 本周流行 -->
       <home-feature />
       <!-- 商品导航 -->
-      <tab-control class="tab-control" :titles="titles" @tabClick="tabClick"></tab-control>
+      <tab-control :titles="titles" @tabClick="tabClick" ref="tabControl2"></tab-control>
       <!-- 商品栏 -->
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
@@ -76,7 +78,13 @@ export default {
       // 当前默认的商品类型
       currentType: "pop",
       // 点击回到顶部按钮的条件判断索引
-      isShowBackTop: false
+      isShowBackTop: false,
+      // 保存tabControl到顶部的距离
+      tabOffsetTop: 0,
+      // TabControl是否吸顶的条件判断索引
+      isTabFixd: false,
+      // 当离开Home组件时，保存当时的位置
+      saveY: 0
     };
   },
   // vue生命周期，当vue运行时调用
@@ -94,8 +102,20 @@ export default {
     // 监听item中图片加载完成
     this.$bus.$on("itemImageLoad", () => {
       // 调用防抖方法，降低refresh刷新的次数
-      debounce(this.$refs.scroll.refresh,200)
+      debounce(this.$refs.scroll.refresh, 200);
     });
+  },
+  // vue生命周期，当Home组件处于活跃时调用
+  activated() {
+    // 使Home组件跳转到上次不活跃时保存的位置
+    this.$refs.scroll.scrollTo(0, this.saveY, 0);
+    // 重新加载better-scroll插件，解决自动跳转回顶部的bug
+    this.$refs.scroll.refresh();
+  },
+  // vue生命周期，当Home组件不活跃时调用
+  deactivated() {
+    // 将当时的Y轴的位置保存到saveY中
+    this.saveY = this.$refs.scroll.getScrollY();
   },
 
   computed: {
@@ -123,6 +143,11 @@ export default {
         default:
           break;
       }
+      // 使两个TabControl的索引相同，
+      // 当点击其中一个TabControl的title时，
+      // 动态使另一个TabControl的title值变成相同的title
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     backClick() {
       // 调用scroll组件中的scrollTo方法
@@ -131,6 +156,9 @@ export default {
     contentScroll(position) {
       // 当滚动的位置大于1000,为true时，显示回到顶部按钮
       this.isShowBackTop = -position.y > 1000;
+
+      // 当滚动的位置大于TabControl到顶部的位置时，使TabControl吸顶
+      this.isTabFixd = -position.y > this.tabOffsetTop;
     },
     loadMore() {
       /**
@@ -139,16 +167,18 @@ export default {
        */
 
       this.getHomeGoods(this.currentType);
-
-      // 调用scroll组件中的refresh方法
-      // this.$refs.scroll.refresh();
+    },
+    swiperImageLoad() {
+      // 获取tabControl的offsetTop的值
+      // 所有的组件都有一个属性$el:用于获取组件中的元素
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
     },
 
     /***
      * 网络请求相关的方法
      *  */
 
-    // 多写一个函数区分模块，是代码更整洁
+    // 多写一个函数区分模块，使代码更整洁
     getHomeMultidata() {
       getHomeMultidata().then(res => {
         // console.log(res);
@@ -192,6 +222,10 @@ export default {
 }
 
 .tab-control {
+  /**
+    吸顶效果
+    但是使用了better-scroll插件后，效果就无效了  
+   */
   position: sticky;
   top: 44px;
 }

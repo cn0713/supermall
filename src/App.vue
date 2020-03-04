@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <!-- 显示路由信息 -->
-    <router-view/>
+    <!-- 保存组件的状态，使它不随意销毁 -->
+    <keep-alive>
+      <!-- 显示路由信息 -->
+      <router-view />
+    </keep-alive>
     <!-- 显示tabbar的内容 -->
-    <main-tab-bar/>
+    <main-tab-bar />
   </div>
 </template>
 
