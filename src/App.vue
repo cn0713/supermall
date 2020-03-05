@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <!-- 保存组件的状态，使它不随意销毁 -->
-    <keep-alive>
+    <!-- 保存组件的状态，使它不随意销毁 
+      exclude="Detail":将Detail组件排除在外
+    -->
+    <keep-alive exclude="Detail">
       <!-- 显示路由信息 -->
       <router-view />
     </keep-alive>

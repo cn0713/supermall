@@ -106,7 +106,7 @@ export default {
     });
   },
   // vue生命周期，当Home组件处于活跃时调用
-  activated() {
+  activated() { 
     // 使Home组件跳转到上次不活跃时保存的位置
     this.$refs.scroll.scrollTo(0, this.saveY, 0);
     // 重新加载better-scroll插件，解决自动跳转回顶部的bug
@@ -114,6 +114,8 @@ export default {
   },
   // vue生命周期，当Home组件不活跃时调用
   deactivated() {
+    console.log(this.$refs.scroll.getScrollY());
+    
     // 将当时的Y轴的位置保存到saveY中
     this.saveY = this.$refs.scroll.getScrollY();
   },

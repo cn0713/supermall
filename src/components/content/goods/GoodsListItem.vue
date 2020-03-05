@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-list">
+  <div class="goods-list" @click="itemClick">
     <!-- @load: 监听每一个img图片 -->
     <img :src="goodsItem.show.img" @load="imageLoads"/>
     <div class="goods-info">
@@ -25,6 +25,10 @@ export default {
       imageLoads(){
         // 通过事件总线方法，将异步获取的img发送出去
         this.$bus.$emit('itemImageLoad')    
+      },
+      itemClick(){
+        // 点击商品信息跳转到详情页,并获取点击图片的id
+        this.$router.push('/detail/'+ this.goodsItem.iid)
       }
     }
 };
