@@ -108,8 +108,9 @@ export default {
   // vue生命周期，当Home组件处于活跃时调用
   activated() {
     // 使Home组件跳转到上次不活跃时保存的位置
-    this.$refs.scroll.scrollTo(0, this.saveY, 0);
-    // 重新加载better-scroll插件，解决自动跳转回顶部的bug
+    // 这里需要给一个跳转时间，这样能解决自动跳转回顶部的bug
+    this.$refs.scroll.scrollTo(0, this.saveY, 10);
+    // 重新加载better-scroll插件，
     this.$refs.scroll.refresh();
   },
   // vue生命周期，当Home组件不活跃时调用
