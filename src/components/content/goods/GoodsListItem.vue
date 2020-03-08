@@ -27,7 +27,7 @@ export default {
         this.$bus.$emit('itemImageLoad')    
       },
       itemClick(){
-        // 点击商品信息跳转到详情页,并获取点击图片的id
+        // 点击商品信息跳转到详情页,并获取点击图片的id 
         this.$router.push('/detail/'+ this.goodsItem.iid)
       }
     }

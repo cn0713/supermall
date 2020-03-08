@@ -81,6 +81,7 @@ export default {
     // 获取Y轴的位置
     getScrollY() {
       return this.scroll ? this.scroll.y : 0;
+      
     }
   }
 };

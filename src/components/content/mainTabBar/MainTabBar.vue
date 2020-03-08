@@ -39,6 +39,6 @@ export default {
 <style scoped>
 .tabbar{
   position: relative;
-  z-index: 10;
+  z-index: 9;
 }
 </style>

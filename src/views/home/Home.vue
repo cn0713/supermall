@@ -96,7 +96,6 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
-
   },
   // vue生命周期，当html模板创建完成后调用
   mounted() {
@@ -108,8 +107,6 @@ export default {
   },
   // vue生命周期，当Home组件处于活跃时调用
   activated() {
-    console.log(this.saveY);
-
     // 使Home组件跳转到上次不活跃时保存的位置
     this.$refs.scroll.scrollTo(0, this.saveY, 0);
     // 重新加载better-scroll插件，解决自动跳转回顶部的bug
@@ -117,11 +114,9 @@ export default {
   },
   // vue生命周期，当Home组件不活跃时调用
   deactivated() {
-    console.log(this.$refs.scroll.getScrollY());
-
     // 将当时的Y轴的位置保存到saveY中
-    this.saveY = this.$refs.scroll.getScrollY();
-  },
+    this.saveY = this.$refs.scroll.getScrollY();    
+  }, 
 
   computed: {
     showGoods() {
@@ -215,9 +210,9 @@ export default {
 
 <style scoped>
 #home {
-  padding-top: 44px;
-  /* 元素会被屏幕撑开，与屏幕一致 */
+    /* 元素会被屏幕撑开，与屏幕一致 */
   height: 100vh;
+  padding-top: 44px;
   position: relative;
 }
 

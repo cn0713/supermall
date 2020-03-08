@@ -9,7 +9,7 @@ export function getDetail(iid) {
   })
 }
 
-// 将三个异步获取的数据整个成一个方法
+// 将三个异步获取的数据整个成一个对象
 export class Goods {
   constructor(itemInfo, columns, services) {
     // 商品介绍
@@ -30,9 +30,9 @@ export class Goods {
   }
 }
 
-// 店铺信息的方法
+// 店铺信息的对象
 export class Shops {
-  constructor(shopInfo){
+  constructor(shopInfo) {
     // 店铺logo
     this.shopLogo = shopInfo.shopLogo
     // 店铺名称
@@ -44,5 +44,15 @@ export class Shops {
     // 评分
     this.score = shopInfo.score
 
+  }
+}
+
+// 参数信息的对象
+export class GoodsParam {
+  constructor(info, rule) {
+    // images可能没有值(某些商品有，某些没有)
+    this.image = info.images ? info.images[0] : ''
+    this.infos = info.set
+    this.sizes = rule.tables      
   }
 }
