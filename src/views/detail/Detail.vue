@@ -13,6 +13,8 @@
       <detail-goods-info :detail-info="detailInfo"></detail-goods-info>
       <!-- 商品参数信息 -->
       <detail-param-info :param-info="paramInfo"></detail-param-info>
+      <!-- 用户评论信息 -->
+      <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
     </scroll>
   </div>
 </template>
@@ -23,11 +25,12 @@ import DetailSwiper from "./childComps/DetailSwiper";
 import DetailBaseInfo from "./childComps/DetailBaseInfo";
 import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
-import DetailParamInfo from './childComps/DetailParamInfo';
+import DetailParamInfo from "./childComps/DetailParamInfo";
+import DetailCommentInfo from "./childComps/DetailCommentInfo";
 
 import Scroll from "components/common/scroll/Scroll";
 
-import { getDetail, Goods, Shops, GoodsParam  } from "network/detail";
+import { getDetail, Goods, Shops, GoodsParam } from "network/detail";
 
 export default {
   name: "Detail",
@@ -38,6 +41,7 @@ export default {
     DetailShopInfo,
     DetailGoodsInfo,
     DetailParamInfo,
+    DetailCommentInfo,
     Scroll
   },
   data() {
@@ -53,7 +57,9 @@ export default {
       // 用来存储异步获取的商品的详细信息
       detailInfo: {},
       // 用来存储异步获取的商品的参数信息
-      paramInfo: {}
+      paramInfo: {},
+      // 用来存储异步获取的用户评论信息
+      commentInfo: {}
     };
   },
   created() {
@@ -91,7 +97,16 @@ export default {
         this.detailInfo = data.detailInfo;
 
         // 6.获取参数信息
-      this.paramInfo = new GoodsParam(data.itemParams.info,data.itemParams.rule)
+        this.paramInfo = new GoodsParam(
+          data.itemParams.info,
+          data.itemParams.rule
+        );
+
+        // 7.获取用户评论信息
+        // 判断是否有评论信息，如果有就获取评论数据
+        if (data.rate.cRate !== 0) {
+          this.commentInfo = data.rate.list[0];
+        }
       });
     }
   }

@@ -213,7 +213,6 @@ export default {
 #home {
     /* 元素会被屏幕撑开，与屏幕一致 */
   height: 100vh;
-  padding-top: 44px;
   position: relative;
 }
 
