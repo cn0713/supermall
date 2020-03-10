@@ -2,7 +2,7 @@
   <div id="detail">
     <!-- 顶部导航 -->
     <detail-nav-bar />
-    <scroll class="content">
+    <scroll class="content" ref="scroll">
       <!-- 顶部轮播图 -->
       <detail-swiper :top-images="topImages"></detail-swiper>
       <!-- 商品信息 -->
@@ -10,11 +10,13 @@
       <!-- 店铺信息 -->
       <detail-shop-info :shops="shops"></detail-shop-info>
       <!-- 商品详细信息 -->
-      <detail-goods-info :detail-info="detailInfo"></detail-goods-info>
+      <detail-goods-info :detail-info="detailInfo" @detailImageLoad="detailImageLoad"></detail-goods-info>
       <!-- 商品参数信息 -->
       <detail-param-info :param-info="paramInfo"></detail-param-info>
       <!-- 用户评论信息 -->
       <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
+      <!-- 商品推荐栏信息 -->
+      <goods-list :goods="recommends"></goods-list>
     </scroll>
   </div>
 </template>
@@ -28,9 +30,18 @@ import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamInfo from "./childComps/DetailParamInfo";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
 
-import Scroll from "components/common/scroll/Scroll";
+import { itemListenerMixin } from "common/mixins";
 
-import { getDetail, Goods, Shops, GoodsParam } from "network/detail";
+import Scroll from "components/common/scroll/Scroll";
+import GoodsList from "components/content/goods/GoodsList";
+
+import {
+  getDetail,
+  getRecommend,
+  Goods,
+  Shops,
+  GoodsParam
+} from "network/detail";
 
 export default {
   name: "Detail",
@@ -42,8 +53,11 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
-    Scroll
+    getRecommend,
+    Scroll,
+    GoodsList
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       // 用来存储Home页面传递过来的iid
@@ -59,7 +73,9 @@ export default {
       // 用来存储异步获取的商品的参数信息
       paramInfo: {},
       // 用来存储异步获取的用户评论信息
-      commentInfo: {}
+      commentInfo: {},
+      // 用来存储异步获取的详情页推荐栏数据
+      recommends: []
     };
   },
   created() {
@@ -68,8 +84,19 @@ export default {
 
     // 2.根据iid请求详情数据
     this.getDetail(this.iid);
+
+    // 3.请求推荐栏数据
+    this.getRecommend();
+  },
+  destroyed() {
+    //取消全局监听事件
+    this.$bus.$off("itemImageLoad", this.itemImageListener);
   },
   methods: {
+    // 接受子组件传递过来的图片信息
+    detailImageLoad() {
+      this.newRefresh();
+    },
     /***
      * 网络请求相关的方法
      *  */
@@ -77,7 +104,7 @@ export default {
     // 多写一个函数区分模块，使代码更整洁
     getDetail(iid) {
       getDetail(iid).then(res => {
-        console.log(res);
+        // console.log(res);
         // 1.获取数据
         const data = res.result;
         // 将异步获取到的数据抽离出来
@@ -107,6 +134,15 @@ export default {
         if (data.rate.cRate !== 0) {
           this.commentInfo = data.rate.list[0];
         }
+      });
+    },
+
+    // 多写一个函数区分模块，使代码更整洁
+    getRecommend() {
+      getRecommend().then(res => {
+        // console.log(res);
+        // 获取详情页推荐栏数据
+        this.recommends = res.data.list;
       });
     }
   }

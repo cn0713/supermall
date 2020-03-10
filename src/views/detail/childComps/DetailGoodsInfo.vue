@@ -7,7 +7,13 @@
     </div>
     <div class="info-key">{{detailInfo.detailImage[0].key}}</div>
     <div class="info-list">
-      <img v-for="(item,index) in detailInfo.detailImage[0].list" :src="item" alt :key="index" />
+      <img
+        v-for="(item,index) in detailInfo.detailImage[0].list"
+        :src="item"
+        @load="imageLoad"
+        alt
+        :key="index"
+      />
     </div>
   </div>
 </template>
@@ -21,6 +27,12 @@ export default {
       default() {
         return {};
       }
+    }
+  },
+  methods: {
+    imageLoad() {
+      // 将监听到的图片信息传递出去
+      this.$emit("detailImageLoad");
     }
   }
 };

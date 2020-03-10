@@ -76,7 +76,7 @@ export default {
      * 当 DOM 结构发生变化的时候务必要调用确保滚动的效果正常
      *  */
     refresh() {
-      this.scroll && this.scroll.refresh();
+      this.scroll && this.scroll.refresh();      
     },
     // 获取Y轴的位置
     getScrollY() {

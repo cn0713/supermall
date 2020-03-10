@@ -9,6 +9,12 @@ export function getDetail(iid) {
   })
 }
 
+export function getRecommend() {
+  return request({
+    url:'/recommend'
+  })
+}
+
 // 将三个异步获取的数据整个成一个对象
 export class Goods {
   constructor(itemInfo, columns, services) {

@@ -1,7 +1,7 @@
 <template>
   <div class="goods-list" @click="itemClick">
     <!-- @load: 监听每一个img图片 -->
-    <img :src="goodsItem.show.img" @load="imageLoads"/>
+    <img :src="showGoods" @load="imageLoads"/>
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -20,6 +20,13 @@ export default {
         return {};
       }
     },
+  },
+  computed:{
+    showGoods(){
+      // 此时异步获取到了两个推荐栏图片，但是两个数据的位置不一样
+      // 所以使用此方法来根据需求获取推荐栏的数据
+      return this.goodsItem.image || this.goodsItem.show.img  
+    }
   },
   methods: {
       imageLoads(){

@@ -41,6 +41,7 @@ import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
 import BackTop from "components/content/backTop/BackTop";
+import { itemListenerMixin } from "common/mixins";
 
 // 网络封装的组件
 import { getHomeMultidata, getHomeGoods } from "network/home";
@@ -58,6 +59,8 @@ export default {
     Scroll,
     BackTop
   },
+  // 混入
+  mixins: [itemListenerMixin],
   data() {
     return {
       // 保存首页导航栏数据
@@ -98,13 +101,7 @@ export default {
     this.getHomeGoods("sell");
   },
   // vue生命周期，当html模板创建完成后调用
-  mounted() {
-    // 监听item中图片加载完成
-    this.$bus.$on("itemImageLoad", () => {
-      // 调用防抖方法，降低refresh刷新的次数
-      debounce(this.$refs.scroll.refresh, 200);
-    });
-  },
+  mounted() {},
   // vue生命周期，当Home组件处于活跃时调用
   activated() {
     // 使Home组件跳转到上次不活跃时保存的位置
@@ -116,8 +113,11 @@ export default {
   // vue生命周期，当Home组件不活跃时调用
   deactivated() {
     // 将当时的Y轴的位置保存到saveY中
-    this.saveY = this.$refs.scroll.getScrollY();    
-  }, 
+    this.saveY = this.$refs.scroll.getScrollY();
+
+    //取消全局监听事件
+    this.$bus.$off("itemImageLoad", this.itemImageListener);
+  },
 
   computed: {
     showGoods() {
@@ -211,7 +211,7 @@ export default {
 
 <style scoped>
 #home {
-    /* 元素会被屏幕撑开，与屏幕一致 */
+  /* 元素会被屏幕撑开，与屏幕一致 */
   height: 100vh;
   position: relative;
 }
