@@ -40,8 +40,7 @@ import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backTop/BackTop";
-import { itemListenerMixin } from "common/mixins";
+import { itemListenerMixin,BackTopMinxin } from "common/mixins";
 
 // 网络封装的组件
 import { getHomeMultidata, getHomeGoods } from "network/home";
@@ -57,10 +56,9 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop
   },
   // 混入
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin,BackTopMinxin],
   data() {
     return {
       // 保存首页导航栏数据
@@ -80,8 +78,6 @@ export default {
       },
       // 当前默认的商品类型
       currentType: "pop",
-      // 点击回到顶部按钮的条件判断索引
-      isShowBackTop: false,
       // 保存tabControl到顶部的距离
       tabOffsetTop: 0,
       // TabControl是否吸顶的条件判断索引
@@ -150,13 +146,9 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    backClick() {
-      // 调用scroll组件中的scrollTo方法
-      this.$refs.scroll.scrollTo(0, 0);
-    },
     contentScroll(position) {
-      // 当滚动的位置大于1000,为true时，显示回到顶部按钮
-      this.isShowBackTop = -position.y > 1000;
+      // 监听BackTop的滚动
+      this.listenShowBackTop(position)
 
       // 当滚动的位置大于TabControl到顶部的位置时，使TabControl吸顶
       this.isTabFixd = -position.y > this.tabOffsetTop;

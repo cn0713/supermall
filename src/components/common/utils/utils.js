@@ -1,4 +1,6 @@
 // 防抖操作，给服务器减轻压力
+// 两个参数:1:业务逻辑函数：需要进行防抖操作的，加入此函数内
+//         2:时间:函数每次调用完之后，等待的时间
 export function debounce(func, delay) {
   // 创建一个空的定时器
   let timer = null
