@@ -19,7 +19,7 @@
       <detail-recommend-info ref="recommend" :recommends="recommends"></detail-recommend-info>
     </scroll>
     <!-- 底部导航栏 -->
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
     <!-- 回到顶部按钮 -->
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
@@ -122,6 +122,21 @@ export default {
     /**
      * 点击事件相关的方法
      */
+    // 点击加入购物车，将商品数据传入购物车页面
+    addToCart(){
+      // 1.获取购物车需要展示的信息
+      const product = {}
+      product.image = this.topImages[0]
+      product.title = this.goods.title
+      product.desc = this.goods.descDetail
+      product.price = this.goods.lowNowPrice
+      product.iid = this.iid
+
+      // 2.将商品的数据传入Vuex中
+      this.$store.dispatch('addCart',product);
+      
+    },
+
     contentScroll(position) {
       // 1.监听BackTop的滚动
       this.listenShowBackTop(position)

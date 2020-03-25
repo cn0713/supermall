@@ -32,6 +32,10 @@ export class Goods {
     this.columns = columns
     // 服务
     this.services = services
+    // 最低的价格
+    this.lowNowPrice = itemInfo.lowNowPrice
+    // 商品详情
+    this.descDetail = itemInfo.desc
 
   }
 }
