@@ -262,5 +262,7 @@ export default {
 
 .content {
   height: calc(100% - 44px - 49px);
+  /* 隐藏多余的部分，使浏览器原始的滚动效果无法使用 */
+  overflow: hidden;
 }
 </style>
