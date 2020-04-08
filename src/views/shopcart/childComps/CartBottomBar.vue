@@ -7,7 +7,7 @@
       @click.native="checkClick"></check-button>全选
     </div>
     <div class="total">合计:{{totalPrice}}</div>
-    <div class="calculate">去计算({{checkLength}})</div>
+    <div class="calculate" @click="toCalculate">去计算({{checkLength}})</div>
   </div>
 </template>
 
@@ -74,6 +74,11 @@ export default {
         this.cartList.forEach(item => item.checked = false)
       }else{ //部分或者全部不选中
         this.cartList.forEach(item => item.checked = true)
+      }
+    },
+    toCalculate(){
+      if (!this.isSelectAll) {
+        this.$toast.show("请选择商品")
       }
     }
   }

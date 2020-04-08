@@ -36,10 +36,11 @@ import DetailCommentInfo from "./childComps/DetailCommentInfo";
 import DetailRecommendInfo from "./childComps/DetailRecommendInfo";
 import DetailBottomBar from "./childComps/DetailBottomBar";
 
-import { itemListenerMixin,BackTopMinxin } from "common/mixins";
+import { itemListenerMixin, BackTopMinxin } from "common/mixins";
 import { debounce } from "components/common/utils/utils";
 
 import Scroll from "components/common/scroll/Scroll";
+import { mapActions } from "vuex";
 
 import {
   getDetail,
@@ -64,7 +65,7 @@ export default {
     getRecommend,
     Scroll,
   },
-  mixins: [itemListenerMixin,BackTopMinxin],
+  mixins: [itemListenerMixin, BackTopMinxin],
   data() {
     return {
       // 用来存储Home页面传递过来的iid
@@ -119,32 +120,42 @@ export default {
     this.$bus.$off("itemImageLoad", this.itemImageListener);
   },
   methods: {
+    // 将vuex中的active中的方法映射过来
+    ...mapActions(["addCart"]),
     /**
      * 点击事件相关的方法
      */
     // 点击加入购物车，将商品数据传入购物车页面
-    addToCart(){
+    addToCart() {
       // 1.获取购物车需要展示的信息
-      const product = {}
-      product.image = this.topImages[0]
-      product.title = this.goods.title
-      product.desc = this.goods.descDetail
-      product.price = this.goods.lowNowPrice
-      product.iid = this.iid
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.descDetail;
+      product.price = this.goods.lowNowPrice;
+      product.iid = this.iid;
 
       // 2.将商品的数据传入Vuex中
-      this.$store.dispatch('addCart',product);
-      
+      // 方法一
+      // this.$store.dispatch('addCart',product).then(res => {
+      //   console.log(res);
+      // });
+
+      // 方法二
+      this.addCart(product).then(res => {
+        // console.log(res);
+        this.$toast.show(res , 1000)
+      });
     },
 
     contentScroll(position) {
       // 1.监听BackTop的滚动
-      this.listenShowBackTop(position)
+      this.listenShowBackTop(position);
 
       // 2.监听滚动到哪个主题
-      this.listenScrollTheme(-position.y)
+      this.listenScrollTheme(-position.y);
     },
-    listenScrollTheme(positionY){
+    listenScrollTheme(positionY) {
       // positionY和主题中的值进行对比
       // 获取themeTopY的长度
       let length = this.themeTopY.length;
