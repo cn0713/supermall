@@ -32,7 +32,7 @@ import Scroll from "components/common/scroll/Scroll";
 
 <style scoped>
 .cart-list{
-  height: calc(100% - 44px - 49px - 40px);
+  height: calc(100% - 44px - 49px - 49px);
 }
 
 .center{

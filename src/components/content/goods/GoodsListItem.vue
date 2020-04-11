@@ -25,7 +25,7 @@ export default {
     showGoods(){
       // 此时异步获取到了两个推荐栏图片，但是两个数据的位置不一样
       // 所以使用此方法来根据需求获取推荐栏的数据
-      return this.goodsItem.image || this.goodsItem.show.img  
+      return this.goodsItem.img || this.goodsItem.image || this.goodsItem.show.img
     }
   },
   methods: {

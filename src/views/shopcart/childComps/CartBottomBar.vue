@@ -88,7 +88,7 @@ export default {
 <style scoped>
 .bottom-bar {
   position: relative;
-  height: 40px;
+  height: 49px;
   background-color: #eee;
   color: #888;
   font-size: 14px;
@@ -108,7 +108,7 @@ export default {
 
 .total {
   flex: 1;
-  line-height: 40px;
+  line-height: 49px;
   margin-left: 10px;
   color: #666;
   font-size: 16px;
@@ -119,6 +119,6 @@ export default {
   background-color: orangered;
   text-align: center;
   color: #fff;
-  line-height: 40px;
+  line-height: 49px;
 }
 </style>
